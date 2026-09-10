@@ -28,18 +28,18 @@ WHERE rank_products <= 5;
 SELECT *
 FROM (
     SELECT
-        p.category_name,          -- Added column to group by
+        p.category,          -- Added column to group by
         p.product_name,
         SUM(f.sales_amount) AS total_revenue,
         RANK() OVER (
-            PARTITION BY p.category_name   -- Resets the rank for each category
+            PARTITION BY p.category   -- Resets the rank for each category
             ORDER BY SUM(f.sales_amount) DESC
         ) AS rank_products
     FROM gold.fact_sales f
     LEFT JOIN gold.dim_products p
         ON p.product_key = f.product_key
     GROUP BY 
-        p.category_name,          -- Must be included in GROUP BY
+        p.category,          -- Must be included in GROUP BY
         p.product_name
 ) AS ranked_products
 WHERE rank_products <= 5;
